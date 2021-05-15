@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx-public
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+  name: pingfederate-admin-upgrade
+spec:
+  rules:
+  - host: "pingfederate-admin-upgrade.likemindscloud.com"
+    http:
+      paths:
+      - path: /
+        pathType: "Prefix"
+        backend:
+          service:
+            name: pingfederate-admin-upgrade
+            port:
+              number: 9999

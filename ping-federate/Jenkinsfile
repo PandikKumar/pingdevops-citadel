@@ -1,0 +1,19 @@
+@Library('apparch-common@release/latest') _
+
+def notify_email = '@citadel.com'
+
+node('docker') {
+  def short_commit = get_short_commit()
+  def env_string = 'void'
+
+  // stage('notify success') {
+  //   mail to: notify_email,
+  //     subject: "New version of Ping Federate in ${env_string}",
+  //     body: "${short_commit} of the Ping Federate has been deployed to ${env_string}"
+
+  //   notifySlack credentialsId: 'sd_apparch',
+  //     message: "New Ping Federate version (${short_commit}) deployed to ${env_string}",
+  //     channel: '#pe-robots',
+  //     workspace: 'ent'
+  // }
+}

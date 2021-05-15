@@ -1,0 +1,7 @@
+apiVersion: v2
+name: citadel-ping-federate
+description: PingFederate deployment in Citadel
+
+type: application
+version: 0.1.0
+appVersion: "10.2.0"

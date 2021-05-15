@@ -1,0 +1,7 @@
+commonLabels:
+  app: pingfederate
+resources:
+- deployment.yaml
+- configmap.yaml
+- service.yaml
+- ingress.yaml

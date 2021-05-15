@@ -1,0 +1,10 @@
+*.[jt]s text=auto eol=lf
+*.[jt]sx text=auto eol=lf
+*.sh text=auto eol=lf
+*.md text=auto eol=lf
+*.j2 text=auto eol=lf
+Dockerfile text=auto eol=lf
+*.json text=auto eol=lf
+Jenkinsfile text=auto eol=lf
+*.html text=auto eol=lf
+*.conf text=auto eol=lf

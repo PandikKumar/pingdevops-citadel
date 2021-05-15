@@ -1,0 +1,17 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pingfederate-admin-upgrade
+  labels:
+    role: pingfederate
+    tier: console
+    version: 10.2.2
+spec:
+  ports:
+  - name: console
+    port: 9999
+  selector:
+    role: pingfederate
+    tier: console
+    version: 10.2.2

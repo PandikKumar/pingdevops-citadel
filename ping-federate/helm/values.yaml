@@ -1,0 +1,9 @@
+environment: dev
+environmentId: 10D118EE-4B86-47AC-BE65-76EAE58F9CF9
+hostSuffix: -dev
+
+serviceAccount:
+  name: sd_pingfeder
+  vaultKey: sd-pingfeder
+
+serverProfileBranch: 'CORESVC-192'

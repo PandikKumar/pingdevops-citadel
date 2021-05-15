@@ -1,0 +1,9 @@
+commonLabels:
+  app: pingfederate-admin-upgrade
+resources:
+- deployment.yaml
+- configmap.yaml
+- service.yaml
+- ingress.yaml
+~
+

@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  CLUSTER_BIND_ADDRESS: NON_LOOPBACK
+  CLUSTER_NAME: K8S_PF_CLUSTER
+  DNS_QUERY_LOCATION: "pingfederate-cluster.citadel.svc.cluster.local"
+  DNS_RECORD_TYPE: A
+  OPERATIONAL_MODE: CLUSTERED_ENGINE
+  PING_IDENTITY_ACCEPT_EULA: "YES"
+  PF_ADMIN_PUBLIC_PORT_HTTPS: "443"
+  PF_ENGINE_PUBLIC_PORT_HTTPS: "443"
+  PF_ENGINE_SECONDARY_PORT: "9032"
+  NODE_TAG: "PINGFED"
+kind: ConfigMap
+metadata:
+  name: pingfederate-engine-environment-variables

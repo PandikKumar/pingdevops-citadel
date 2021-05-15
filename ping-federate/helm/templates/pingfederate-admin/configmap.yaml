@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  CLUSTER_BIND_ADDRESS: NON_LOOPBACK
+  CLUSTER_NAME: K8S_PF_CLUSTER
+  DNS_QUERY_LOCATION: "pingfederate-cluster.citadel.svc.cluster.local"
+  DNS_RECORD_TYPE: A
+  OPERATIONAL_MODE: CLUSTERED_CONSOLE
+  PING_IDENTITY_ACCEPT_EULA: "YES"
+  PF_ADMIN_PUBLIC_PORT_HTTPS: "443"
+  PF_ENGINE_PUBLIC_PORT_HTTPS: "443"
+  NODE_TAG: "PINGFED"
+  MUTE_LICENSE_VERIFICATION: "yes"
+  # PF_CONSOLE_AUTHENTICATION: "LDAP"
+  # PF_ADMIN_API_AUTHENTICATION: "LDAP"
+  ADMIN_LDAP_URL: "ldap://13.234.240.83"
+  ADMIN_USER_BASE_DN: "CN=Users,DC=likemindscloud,DC=com"
+  ADMIN_GROUP_BASE_DN: "OU=Likeminds-Group,DC=likemindscloud,DC=com"
+  ADMIN_LDAP_USER_FILTER: "(sAMAccountName={0})"
+  ADMIN_LDAP_GROUP_ATTR: "memberOf"
+  ADMIN_LDAP_ROLE_ADMIN: "CN=Admin,OU=Likeminds-Group,DC=likemindscloud,DC=com"
+  ADMIN_LDAP_ROLE_CRYPTO: "CN=CryptoAdmin,OU=Likeminds-Group,DC=likemindscloud,DC=com"
+  ADMIN_LDAP_ROLE_AUDIT: "CN=Audit,OU=Likeminds-Group,DC=likemindscloud,DC=com"
+  ADMIN_LDAP_ROLE_USER: "CN=Admin,OU=Likeminds-Group,DC=likemindscloud,DC=com"
+  ADMIN_LDAP_ROLE_EXPRESSION: "CN=Admin,OU=Likeminds-Group,DC=likemindscloud,DC=com"
+kind: ConfigMap
+metadata:
+  name: pingfederate-admin-environment-variables

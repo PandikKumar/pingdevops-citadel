@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingfederate
+  labels:
+    role: pingfederate
+    tier: engine
+    version: 10.1.5
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: pingfederate
+      tier: engine
+      version: 10.1.5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      name: pingfederate
+      labels:
+        role: pingfederate
+        tier: engine
+        version: 10.1.5
+    spec:
+      containers:
+      - name: pingfederate
+        image: pingidentity/pingfederate:10.1.5
+        ports:
+        - containerPort: 9031
+        - containerPort: 9032
+        - containerPort: 7600
+        env:
+          ## =============== REPLACE
+          ## https://devops.pingidentity.com/how-to/containerAnatomy/#built-into-the-image
+          - name: SERVER_PROFILE_URL
+            value: https://github.com/PandikKumar/citadel-devops-vikram.git 
+          - name: SERVER_PROFILE_PATH
+            value: server-profiles/pingfederate-admin
+          - name: SERVER_PROFILE_BRANCH
+            value: main
+          ## =============== END REPLACE
+          - name: PF_ENGINE_PUBLIC_HOSTNAME
+            value: "pingfederate.likemindscloud.com"
+          - name: PF_ADMIN_PUBLIC_HOSTNAME
+            value: "pingfederate-admin.likemindscloud.com"
+        envFrom:
+        - configMapRef:
+            name: pingfederate-engine-environment-variables
+        # readiness is important during a rolling update.
+        readinessProbe:
+          httpGet:
+            path: /pf/heartbeat.ping
+            port: 9031
+            scheme: HTTPS
+          periodSeconds: 10
+        # the prestop 'sleep' should be slightly higher than the lifetime of an _authorization code_
+        # auth codes are not shared across the cluster unless requested, the prestop hook ensures that a
+        # PF engine is alive and accessible only to other engines long enough to provide auth codes it owns.
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","sleep 20"]
+        # resources and limits should be defined, and equivalent to each other.
+        # these numbers are completely arbitrary and should be configured appropriately.
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+          requests:
+            cpu: "1"
+            memory: 1.5Gi
+        volumeMounts:
+          - name: license
+            mountPath: /opt/in/instance/server/default/conf/pingfederate.lic
+            subPath: pingfederate.lic
+      volumes:
+        - name: license
+          secret:
+            secretName: pingfederate
+          #  items:
+          #    - key: license
+          #      path: pingfederate.lic
+      # TODO: Following is commented out because we don't have this image
+      # this helps on the _initial_ start of the cluster to ensure engines and admins don't create cluster islands
+      # initContainers:
+      # - name: init
+      #   image: curlimages/curl:latest
+      #   command: ['sh', '-c', 'until curl --connect-timeout 1 --silent -k https://pingfederate-admin:9999/pingfederate/app ; do echo waiting for admin ; sleep 2 ; done']
+      #   resources:
+      #     limits:
+      #       cpu: 50m
+      #       memory: 128Mi
+      #     requests:
+      #       cpu: 50m
+      #       memory: 128Mi

@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    role: pingfederate
+    tier: console
+    version: 10.2.2
+  name: pingfederate-admin-upgrade
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      role: pingfederate
+      tier: console
+      version: 10.2.2
+  template:
+    metadata:
+      labels:
+        role: pingfederate
+        tier: console
+        version: 10.2.2
+      name: pingfederate-admin-upgrade
+    spec:
+      containers:
+      - name: pingfederate-admin-upgrade
+        image: pingidentity/pingfederate:10.2.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9999
+        - containerPort: 7600
+        - containerPort: 7700
+        env:
+          ## =============== REPLACE
+          ## https://devops.pingidentity.com/how-to/containerAnatomy/#built-into-the-image
+          - name: SERVER_PROFILE_URL
+            value: https://github.com/PandikKumar/citadel-devops-vikram.git
+          # TODO: Change me back to server-profiles/pingfederate-admin
+          - name: SERVER_PROFILE_PATH
+            value: server-profiles/pingfederate-admin-upgrade
+          - name: SERVER_PROFILE_BRANCH
+            value: main
+          ## =============== END REPLACE
+          - name: PF_LDAP_USERNAME
+            value: kumar
+          - name: PF_LDAP_PASSWORD
+            value: "Lms@12345"
+          - name: PF_ENGINE_PUBLIC_HOSTNAME
+            value: "pingfederate-upgrade.likemindscloud.com"
+          - name: PF_ADMIN_PUBLIC_HOSTNAME
+            value: "pingfederate-admin-upgrade.likemindscloud.com"
+          - name: ADMIN_ENVIRONMENT_NAME
+            value: Dev
+        envFrom:
+        - configMapRef:
+            name: pingfederate-admin-environment-variables
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /pingfederate/app
+            port: 9999
+            scheme: HTTPS
+          initialDelaySeconds: 100
+          periodSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /pingfederate/app
+            port: 9999
+            scheme: HTTPS
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1.5Gi
+          requests:
+            cpu: "1"
+            memory: 1.5Gi
+        volumeMounts:
+              - name: license
+                mountPath: /opt/in/instance/server/default/conf/pingfederate.lic
+                subPath: pingfederate.lic
+      volumes:
+        - name: license
+          secret:
+            secretName: pingfederate

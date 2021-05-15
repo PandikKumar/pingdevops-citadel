@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pingfederate
+  labels:
+    role: pingfederate
+    tier: engine
+    version: 10.1.5
+spec:
+  ports:
+  - name: https
+    port: 9031
+    protocol: TCP
+  - name: mtls
+    port: 9032
+    protocol: TCP
+  selector:
+    role: pingfederate
+    tier: engine
+    version: 10.1.5

@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx-public
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+  name: pingfederate-upgrade
+spec:
+  rules:
+  - host: "pingfederate-upgrade.likemindscloud.com"
+    http:
+      paths:
+      - path: /
+        pathType: "Prefix"
+        backend:
+          service:
+            name: pingfederate
+            port:
+              number: 9031
+  - host: "sso-pki.likemindscloud.com"
+    http:
+      paths:
+        - path: /
+          pathType: "Prefix"
+          backend:
+            service:
+              name: pingfederate
+              port:
+                number: 9032
